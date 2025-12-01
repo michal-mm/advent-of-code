@@ -62,7 +62,7 @@ public class D01_1 {
 
     @Test
     public void testPuzzle() throws IOException {
-        var input = Files.readString(Path.of("src/aoc2025/D01_1_input.txt"));
+        var input = Files.readString(Path.of("resources/aoc2025/D01_1_input.txt"));
         int expected = 1168;
 
         assertEquals(expected, calculatePassword(input));
