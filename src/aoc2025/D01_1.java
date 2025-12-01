@@ -13,9 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class D01_1 {
 
-    void main() {
-    }
-
     int calculatePassword(String input) {
         int result = 0;
         var inputList = parseInput(input);
@@ -33,7 +30,8 @@ public class D01_1 {
     }
 
     int rotateLeft(int from, int number) {
-        return (from - number) % 100;
+        number = number % 100;
+        return from < number ? (100+from-number) % 100 : from-number;
     }
 
     int rotateRight(int from, int number) {
