@@ -50,17 +50,20 @@ public class D07_2 {
 
     }
 
-    int getNumOfDifferentRoutes(List<List<Character>> grid) {
-        Set<List<Integer>> routes = new HashSet<>();
+    long getNumOfDifferentRoutes(List<List<Character>> grid) {
 
         var startIdx = grid.getFirst().indexOf('S');
-        List<Integer> path = new ArrayList<>();
-        path.add(startIdx);
+        Map<Integer, Long> toProcess = new HashMap<>();
+        toProcess.put(startIdx, 1L);
 
-        var rowIdx = 1;
-        explorePaths(grid, routes, path, rowIdx, startIdx);
+        for (int i=1; i<grid.size()-1; i++) {
+            var row = grid.get(i);
+            toProcess =  getNewPositions(row, toProcess);
+        }
 
-        return routes.size();
+        return toProcess.values().stream()
+                .mapToLong(i -> i)
+                .sum();
     }
 
     List<List<Character>> parseInput(String input) {
@@ -78,27 +81,25 @@ public class D07_2 {
         return grid;
     }
 
-    private void explorePaths(List<List<Character>> grid,
-                              Set<List<Integer>> routes,
-                              List<Integer> path, int row, int index) {
-        if (row == grid.size()-1) {
-            routes.add(path);
-            return;
+    private Map<Integer, Long> getNewPositions(List<Character> row,
+                                                      Map<Integer, Long> toProcess) {
+        Map<Integer, Long> newToProcess = new HashMap<>();
+
+        for (Map.Entry<Integer, Long> entry : toProcess.entrySet()) {
+            var idx = entry.getKey();
+            var numOfPaths = entry.getValue();
+
+            if (row.get(idx) == '^') {
+                var leftVal = newToProcess.getOrDefault(idx-1, 0L) + numOfPaths;
+                newToProcess.put(idx-1, leftVal);
+                var rightVal = newToProcess.getOrDefault(idx+1, 0L) + numOfPaths;
+                newToProcess.put(idx+1, rightVal);
+            } else {
+                newToProcess.put(idx, newToProcess.getOrDefault(idx, 0L) + numOfPaths);
+            }
         }
 
-        if (grid.get(row).get(index) == '^') {
-            // go left
-            path.add(index-1);
-            explorePaths(grid, routes, path, row+1, index-1);
-            path.removeLast();
-            // now go right
-            path.add(index+1);
-            explorePaths(grid, routes, path, row+1, index+1);
-            path.removeLast();
-        } else {
-            path.add(index);
-            explorePaths(grid, routes, path, row+1, index);
-            path.removeLast();
-        }
+        return newToProcess;
+
     }
 }
