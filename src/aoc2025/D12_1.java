@@ -2,6 +2,9 @@ package aoc2025;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -11,8 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class D12_1 {
 
-    private static final String INPUT_FILE = "resources/aoc2025/D11_1_input.txt";
+    private static final String INPUT_FILE = "resources/aoc2025/D12_1_input.txt";
 
+    void main() throws IOException {
+        var input = Files.readString(Path.of(INPUT_FILE));
+        var boardsAndPuzzles = parseInput(input);
+        var solution = getRegionsThatCanFitAllGifts(boardsAndPuzzles);
+        IO.println("Solution: " + solution);
+    }
+    // 1500 too high
     @Test
     void testExample() {
         var input = """
@@ -99,8 +109,6 @@ public class D12_1 {
         var linesWithoutBoardsDef = map.get(false);
         var puzzles = getPuzzles(linesWithoutBoardsDef);
 
-        IO.println(boards);
-
         var puzzlesAndBoards = new PuzzlesAndBoards();
         puzzlesAndBoards.setBoards(boards);
         puzzlesAndBoards.setPuzzles(puzzles);
@@ -172,10 +180,6 @@ public class D12_1 {
             totalSize =  puzzles.stream()
                     .mapToInt(Puzzle::size)
                     .sum();
-        }
-
-        private int getTotalSize() {
-            return totalSize;
         }
     }
 
