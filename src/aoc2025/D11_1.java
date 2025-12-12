@@ -51,7 +51,7 @@ public class D11_1 {
             return 1L;
         }
 
-        return  mapping.get(from).stream()
+        return  mapping.getOrDefault(from, Set.of()).stream()
                 .mapToLong(str -> getNumOfPathsFromTo(mapping, str, to))
                 .sum();
     }
